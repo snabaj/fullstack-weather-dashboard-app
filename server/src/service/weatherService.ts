@@ -94,7 +94,11 @@ class WeatherService {
 
   // TODO: Create fetchAndDestructureLocationData method
   private async fetchAndDestructureLocationData(city: string): Promise<Coordinates> {
+    this.cityName = city;
     const locationData = await this.fetchLocationData(city);
+    const geocodeQuery = await this.buildGeocodeQuery();
+    const [lat, lon] = geocodeQuery.split(',').map(Number);
+    return { lat, lon };
     return this.destructureLocationData(locationData);
   }
 
@@ -127,7 +131,7 @@ class WeatherService {
   }
 
   // TODO: Complete buildForecastArray method
-  private buildForecastArray(currentWeather: Weather, weatherData: any[]) {
+  private buildForecastArray(weatherData: any[]): Weather[] {
     return weatherData.map((data) => {
       return {
         date: data.dt_txt,
@@ -150,7 +154,7 @@ class WeatherService {
     const forecastResponse = await fetch(forecastQuery);
     const forecastData = await forecastResponse.json();
 
-    currentWeather.forecast = this.buildForecastArray(currentWeather, forecastData.list);
+    currentWeather.forecast = this.buildForecastArray(forecastData.list);
     return currentWeather;
   }
 }

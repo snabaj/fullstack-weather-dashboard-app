@@ -41,17 +41,17 @@ class HistoryService {
     if (!city) {
       throw new Error('City name is required');
     }
-    const newCity: City = {name: city, id: uuidv4()};
-    return await this.getCities()
-    .then((cities) => {
-      if (cities.find((index) => index.name === city)) {
-        return cities;
-      }
-      return [...cities, newCity];
-    })
-    .then((updatedCities) => this.write(updatedCities));
-    .then(() => newCity);
+    const newCity: City = { name: city, id: uuidv4() };
+    try {
+      const cities = await this.getCities();
+      const updatedCities = [...cities, newCity];
+      await this.write(updatedCities);
+      return newCity;
+    } catch (error) {
+      console.error('Error adding city:', error);
+      throw error;
   }
+}
   // * BONUS TODO: Define a removeCity method that removes a city from the searchHistory.json file
   async removeCity(id: string) {
     return await this.getCities()

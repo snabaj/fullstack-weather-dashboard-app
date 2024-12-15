@@ -23,7 +23,7 @@ try {
 
 
 // TODO: GET search history
-router.get('/history', async (req, res) => {
+router.get('/history', async (_req, res) => {
   try {
     const cities = await historyService.getCities();
     res.json(cities);
