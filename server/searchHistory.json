@@ -22,5 +22,21 @@
   {
     "name": "New York",
     "id": "efc808e8-c076-4848-b6ff-ac936297ef63"
+  },
+  {
+    "name": "San Diego",
+    "id": "161db019-375f-40e8-afa5-5ac89a9aacd1"
+  },
+  {
+    "name": "New York",
+    "id": "9469c7d5-ba37-42eb-86a7-121c0208abd2"
+  },
+  {
+    "name": "chicago",
+    "id": "f72e89f0-2979-4bfb-b655-7eb2d1663736"
+  },
+  {
+    "name": "New York",
+    "id": "da494896-b035-4301-b9dd-8915a089bfe7"
   }
 ]
