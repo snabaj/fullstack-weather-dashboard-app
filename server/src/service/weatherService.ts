@@ -7,15 +7,8 @@ interface Coordinates {
   lon: number;
 }
 
-interface Weather {
-  date: string;
-  temperature: number;
-  description: string;
-  icon: string;
-}
-
 // TODO: Define a class for the Weather object
-class WeatherObject {
+class Weather {
   city: string;
   temperature: number;
   description: string;
@@ -26,7 +19,7 @@ class WeatherObject {
   windSpeed: number;
   forecast: Weather[];
 
-  constructor(city: string, temperature: number, description: string, icon: string, date: string, feelsLike: number, humidity: number, windSpeed: number, forecast: Weather[]) {
+  constructor(city: string, temperature: number, description: string, icon: string, date: string, feelsLike: number, humidity: number, windSpeed: number, forecast: Weather[],) {
     this.city = city;
     this.temperature = temperature;
     this.description = description;
@@ -36,7 +29,7 @@ class WeatherObject {
     this.humidity = humidity;
     this.windSpeed = windSpeed;
     this.forecast = forecast;
-  }
+}
 }
 
 // TODO: Complete the WeatherService class
@@ -60,7 +53,7 @@ class WeatherService {
       const data = await response.json();
       return data[0]; // Assuming the first result is most relevant
     } catch (error) {
-      console.error('Error in fetchLocationData:', error);
+      console.log('Error in fetchLocationData:', error);
       throw error;
     }
   }
@@ -82,7 +75,7 @@ class WeatherService {
       if (data.length === 0) throw new Error('No geocode data found for the city');
       return `${data[0].lat},${data[0].lon}`; // Return as a "lat,lon" string
     } catch (error) {
-      console.error('Error in buildGeocodeQuery:', error);
+      console.log('Error in buildGeocodeQuery:', error);
       throw error; // Re-throw error to let caller handle it
     }
   }
@@ -93,11 +86,11 @@ class WeatherService {
   }
 
   // TODO: Create fetchAndDestructureLocationData method
-  private async fetchAndDestructureLocationData(city: string): Promise<Coordinates> {
-    this.cityName = city;
-    const locationData = await this.fetchLocationData(city);
-    const geocodeQuery = await this.buildGeocodeQuery();
-    const [lat, lon] = geocodeQuery.split(',').map(Number);
+  private async fetchAndDestructureLocationData(city: string): Promise<Coordinates> {//fetch and destructure location data
+    this.cityName = city;//set city name
+    const locationData = await this.fetchLocationData(city);//fetch location data
+    const geocodeQuery = await this.buildGeocodeQuery();//build geocode query
+    const [lat, lon] = geocodeQuery.split(',').map(Number);//destructure geocode query
     return { lat, lon };
     return this.destructureLocationData(locationData);
   }
@@ -110,22 +103,23 @@ class WeatherService {
       if (!response.ok) throw new Error('Error fetching weather data');
       return await response.json();
     } catch (error) {
-      console.error('Error in fetchWeatherData:', error);
+      console.log('Error in fetchWeatherData:', error);
       throw error;
     }
   }
 
   // TODO: Build parseCurrentWeather method
   private parseCurrentWeather(response: any) {
-    return new WeatherObject(
-      response.name,
-      response.main.temp,
-      response.weather[0].description,
-      response.weather[0].icon,
-      response.dt,
-      response.main.feels_like,
-      response.main.humidity,
-      response.wind.speed,
+    const weather = response.weather[0] || {};
+    return new Weather(
+      response.name || 'Unknown',
+      response.main.temp || 0,
+      weather.description || 'Unknown',
+      weather.icon || '',
+      response.dt || '',
+      response.main?.feels_like || 0,
+      response.main?.humidity || 0,
+      response.wind?.speed || 0,
       [] // Placeholder for forecast data
     );
   }
@@ -134,10 +128,15 @@ class WeatherService {
   private buildForecastArray(weatherData: any[]): Weather[] {
     return weatherData.map((data) => {
       return {
-        date: data.dt_txt,
-        temperature: data.main.temp,
-        description: data.weather[0].description,
-        icon: data.weather[0].icon,
+        city: this.cityName || 'Unknown',
+        temperature: data.main.temp || 0,
+        description: data.weather[0]?.description || 'Unknown',
+        icon: data.weather[0]?.icon || '',
+        date: data.dt_txt || '',
+        feelsLike: data.main?.feels_like || 0,
+        humidity: data.main?.humidity || 0,
+        windSpeed: data.wind?.speed || 0,
+        forecast: [] // Placeholder for forecast data
       };
     });
   }

@@ -7,41 +7,61 @@ import historyService from '../../service/historyService.js';
 import weatherService from '../../service/weatherService.js';
 
 // TODO: POST Request with city name to retrieve weather data
-router.post('/weather', async (req, res) => {
+router.post('/', async (req, res) => {
   const { city } = req.body;
+  console.log(req.body);
+  if (!city || typeof city !== 'string') {
+    return res.status(400).json({ message: 'City name is required' });
+  }
+  try {
+    const weatherData = await weatherService.getWeatherForCity(city);
+    await historyService.addCity(city);
+    return res.json(weatherData);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: 'Server Error' });
+  }
+});
+
 // TODO: GET weather data from city name
-try {
-  const weatherData = await weatherService.getWeatherForCity(city);
-  // TODO: save city to search history
-  await historyService.addCity(city);
-  res.json(weatherData);
-} catch (error) {
-  console.error(error);
-  res.status(500).json({ message: 'Server Error' });
-}
+router.get('/weather', async (req, res) => {
+  const { city } = req.query;
+  if (!city || typeof city !== 'string') {
+    return res.status(400).json({ message: 'City name is required' });
+  }
+  try {
+    const weatherData = await weatherService.getWeatherForCity(city);
+    return res.json(weatherData);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: 'Server Error' });
+  }
 });
 
 
-// TODO: GET search history
+//TODO: GET search history
 router.get('/history', async (_req, res) => {
   try {
     const cities = await historyService.getCities();
     res.json(cities);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server Error' });
+    console.log(error);
+   res.status(500).json({ message: 'Server Error' });
   }
 });
 
 // * BONUS TODO: DELETE city from search history
 router.delete('/history/:id', async (req, res) => {
   const { id } = req.params;
+  if (!id) {
+    return res.status(400).json({ message: 'City ID is required' });
+  }
   try {
     await historyService.removeCity(id);
-    res.json({ message: 'City removed from history' });
+    return res.status(204).send(); 
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server Error' });
+    console.log(error);
+    return res.status(500).json({ message: 'Server Error' });
   }
 });
 

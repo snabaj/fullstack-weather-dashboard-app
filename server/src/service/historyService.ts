@@ -22,7 +22,7 @@ class HistoryService {
   }
   // TODO: Define a write method that writes the updated cities array to the searchHistory.json file
   private async write(cities: City[]) {
-    return await fs.writeFile('searchHistory.json', JSON.stringify(cities));
+    return await fs.writeFile('searchHistory.json', JSON.stringify(cities, null, 2));
   }
   // TODO: Define a getCities method that reads the cities from the searchHistory.json file and returns them as an array of City objects
   async getCities() {
@@ -48,7 +48,7 @@ class HistoryService {
       await this.write(updatedCities);
       return newCity;
     } catch (error) {
-      console.error('Error adding city:', error);
+      console.log('Error adding city:', error);
       throw error;
   }
 }

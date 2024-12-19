@@ -34,22 +34,21 @@ API Calls
 
 */
 
-const fetchWeather = async (cityName: string) => {
-  const response = await fetch('/api/weather/', {
+const fetchWeather = async (city: string) => {
+  const response = await fetch('/api/weather', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ cityName }),
+    body: JSON.stringify({ city }),
   });
-
   const weatherData = await response.json();
 
   console.log('weatherData: ', weatherData);
 
   renderCurrentWeather(weatherData[0]);
-  renderForecast(weatherData.slice(1));
-};
+  renderForecast(weatherData[1]);
+  }
 
 const fetchSearchHistory = async () => {
   const history = await fetch('/api/weather/history', {
@@ -58,7 +57,7 @@ const fetchSearchHistory = async () => {
       'Content-Type': 'application/json',
     },
   });
-  return history;
+  return history.json();
 };
 
 const deleteCityFromHistory = async (id: string) => {
@@ -76,9 +75,9 @@ Render Functions
 
 */
 
-const renderCurrentWeather = (currentWeather: any): void => {
-  const { city, date, icon, iconDescription, tempF, windSpeed, humidity } =
-    currentWeather;
+const renderCurrentWeather = (currentWeather: any): void =>{
+  const { city, date, icon, iconDescription, tempF, windSpeed, humidity } = 
+   currentWeather ?? {};
 
   // convert the following to typescript
   heading.textContent = `${city} (${date})`;
@@ -112,10 +111,12 @@ const renderForecast = (forecast: any): void => {
     forecastContainer.append(headingCol);
   }
 
+  forecast = forecast || [];
   for (let i = 0; i < forecast.length; i++) {
     renderForecastCard(forecast[i]);
   }
 };
+
 
 const renderForecastCard = (forecast: any) => {
   const { date, icon, iconDescription, tempF, windSpeed, humidity } = forecast;
@@ -140,7 +141,7 @@ const renderForecastCard = (forecast: any) => {
 };
 
 const renderSearchHistory = async (searchHistory: any) => {
-  const historyList = await searchHistory.json();
+  const historyList = await searchHistory;
 
   if (searchHistoryContainer) {
     searchHistoryContainer.innerHTML = '';
