@@ -46,8 +46,10 @@ const fetchWeather = async (city: string) => {
 
   console.log('weatherData: ', weatherData);
 
-  renderCurrentWeather(weatherData[0]);
-  renderForecast(weatherData[1]);
+  renderCurrentWeather(weatherData);
+  renderForecast(weatherData.forecast);
+  //renderCurrentWeather(weatherData[0]);
+  //renderForecast(weatherData[1]);
   }
 
 const fetchSearchHistory = async () => {
@@ -75,9 +77,9 @@ Render Functions
 
 */
 
-const renderCurrentWeather = (currentWeather: any): void =>{
-  const { city, date, icon, iconDescription, tempF, windSpeed, humidity } = 
-   currentWeather ?? {};
+const renderCurrentWeather = (currentWeather: any): void => {
+  const { city, date, icon, iconDescription, tempF, windSpeed, humidity } =
+    currentWeather;
 
   // convert the following to typescript
   heading.textContent = `${city} (${date})`;

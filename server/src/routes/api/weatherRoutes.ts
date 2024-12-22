@@ -31,7 +31,7 @@ router.get('/weather', async (req, res) => {
   }
   try {
     const weatherData = await weatherService.getWeatherForCity(city);
-    return res.json(weatherData);
+    return res.json(weatherData.forecast);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: 'Server Error' });

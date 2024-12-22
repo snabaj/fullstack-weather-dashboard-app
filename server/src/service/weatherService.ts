@@ -113,10 +113,14 @@ class WeatherService {
     const weather = response.weather[0] || {};
     return new Weather(
       response.name || 'Unknown',
-      response.main.temp || 0,
+      response.main?.temperature || 0,
       weather.description || 'Unknown',
       weather.icon || '',
-      response.dt || '',
+      new Date(response.dt * 1000).toLocaleDateString('en-US', {
+        month: 'numeric',
+        day: 'numeric',
+        year: 'numeric',
+      }),
       response.main?.feels_like || 0,
       response.main?.humidity || 0,
       response.wind?.speed || 0,
@@ -125,21 +129,47 @@ class WeatherService {
   }
 
   // TODO: Complete buildForecastArray method
-  private buildForecastArray(weatherData: any[]): Weather[] {
-    return weatherData.map((data) => {
-      return {
-        city: this.cityName || 'Unknown',
-        temperature: data.main.temp || 0,
-        description: data.weather[0]?.description || 'Unknown',
-        icon: data.weather[0]?.icon || '',
-        date: data.dt_txt || '',
-        feelsLike: data.main?.feels_like || 0,
-        humidity: data.main?.humidity || 0,
-        windSpeed: data.wind?.speed || 0,
-        forecast: [] // Placeholder for forecast data
-      };
-    });
-  }
+  // Convert the date to a human-readable format in a format like 12/31/2021 and no time displayed
+  //filter out duplicate days so that you dont have 40+ days displaying
+
+    private buildForecastArray(forecastData: any[]) {
+      const uniqueDates = new Set<string>(); // To store unique dates
+      const forecast = forecastData
+        .filter((data) => {
+          const date = new Date(data.dt * 1000);
+          const today = new Date();
+          return date.getDate() !== today.getDate(); //ensures only future dates are displayed
+        })
+        .map((data) => {
+          const formattedDate = new Date(data.dt * 1000).toLocaleDateString('en-US', { //formats the date as mm/dd/yyyy
+            month: 'numeric',
+            day: 'numeric',
+            year: 'numeric',
+          });
+
+          if (uniqueDates.has(formattedDate)) { //checks for duplicate dates
+            return null; // Skip duplicates
+          }
+          uniqueDates.add(formattedDate); // Add the date to the set
+          const weather = data.weather[0] || {}; // Get the first weather object
+          return new Weather(
+            this.cityName || 'Unknown',
+            //why is the temperature undefined? 
+            data.main?.temperature || 0,
+            weather.description || 'Unknown',
+            weather.icon || '',
+            formattedDate,
+            data.main?.feels_like || 0,
+            data.main?.humidity || 0,
+            data.wind?.speed || 0,
+            []
+          );
+        })
+        .filter((item) => item !== null); // Remove null entries
+      return forecast.slice(0, 5); // Limit the result to 5 unique days
+    }
+
+
 
   // TODO: Complete getWeatherForCity method
   async getWeatherForCity(city: string) {
@@ -148,14 +178,13 @@ class WeatherService {
     const weatherData = await this.fetchWeatherData(coordinates);
     const currentWeather = this.parseCurrentWeather(weatherData);
 
-    // For simplicity, we assume a separate forecast API exists
     const forecastQuery = `${this.baseURL}/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${this.apiKey}`;
     const forecastResponse = await fetch(forecastQuery);
     const forecastData = await forecastResponse.json();
 
     currentWeather.forecast = this.buildForecastArray(forecastData.list);
     return currentWeather;
-  }
+}
 }
 
 export default new WeatherService();
