@@ -10,7 +10,7 @@ interface Coordinates {
 // TODO: Define a class for the Weather object
 class Weather {
   city: string;
-  temperature: number;
+  temp: number;
   description: string;
   icon: string;
   date: string;
@@ -19,9 +19,9 @@ class Weather {
   windSpeed: number;
   forecast: Weather[];
 
-  constructor(city: string, temperature: number, description: string, icon: string, date: string, feelsLike: number, humidity: number, windSpeed: number, forecast: Weather[],) {
+  constructor(city: string, temp: number, description: string, icon: string, date: string, feelsLike: number, humidity: number, windSpeed: number, forecast: Weather[],) {
     this.city = city;
-    this.temperature = temperature;
+    this.temp = temp;
     this.description = description;
     this.icon = icon;
     this.date = date;
@@ -113,7 +113,7 @@ class WeatherService {
     const weather = response.weather[0] || {};
     return new Weather(
       response.name || 'Unknown',
-      response.main?.temperature || 0,
+      response.main.temp || 0,
       weather.description || 'Unknown',
       weather.icon || '',
       new Date(response.dt * 1000).toLocaleDateString('en-US', {
@@ -154,8 +154,7 @@ class WeatherService {
           const weather = data.weather[0] || {}; // Get the first weather object
           return new Weather(
             this.cityName || 'Unknown',
-            //why is the temperature undefined? 
-            data.main?.temperature || 0,
+            data.main.temp || 0,
             weather.description || 'Unknown',
             weather.icon || '',
             formattedDate,

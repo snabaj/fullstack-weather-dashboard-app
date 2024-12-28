@@ -1,29 +1,5 @@
 [
   {
-    "name": "San Diego",
-    "id": "d82db228-59ac-4b6b-ab0c-c09d8c12e1cd"
-  },
-  {
-    "name": "San Diego",
-    "id": "5eecc0de-ef2a-49fd-bb57-2cefc96e8e0a"
-  },
-  {
-    "name": "New York",
-    "id": "83a4e8f5-f31e-4140-abac-1114ab95bd29"
-  },
-  {
-    "name": "New York",
-    "id": "2a791012-ffca-42a5-9843-782b51948b13"
-  },
-  {
-    "name": "chicago",
-    "id": "38fb0dcf-d242-40bf-acbc-2c3763940ffd"
-  },
-  {
-    "name": "San Diego",
-    "id": "80e0ddd6-2b28-4f44-aa91-000c41373d12"
-  },
-  {
     "name": "maine",
     "id": "ee5294d8-1f7a-4091-9910-024a072dd885"
   },
@@ -34,5 +10,33 @@
   {
     "name": "San Diego",
     "id": "bf7f833b-2f19-49dc-8919-1c93d74875cd"
+  },
+  {
+    "name": "chicago",
+    "id": "8ecbfe30-207c-4860-b376-5d5f504a399a"
+  },
+  {
+    "name": "chicago",
+    "id": "6c594164-813f-464e-b20b-5a261c91fefa"
+  },
+  {
+    "name": "Boston",
+    "id": "d3964650-1d36-40aa-bc90-9cb606e0f3e7"
+  },
+  {
+    "name": "Boston",
+    "id": "b31e4ca2-cc23-44f3-b05e-40c63a26f1cd"
+  },
+  {
+    "name": "hawaii",
+    "id": "89ab1584-7439-4244-b5fe-b7e4dc180704"
+  },
+  {
+    "name": "chicago",
+    "id": "b04903af-1a7a-4469-bf7d-e3b7ea572d9a"
+  },
+  {
+    "name": "San Diego",
+    "id": "2c88266f-5810-47d1-ba9a-e39ab0f41e97"
   }
 ]

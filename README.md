@@ -23,6 +23,12 @@ Set up environment variables.
 
 The user starts the application by using the command “npm run start:dev” in their terminal. This command launches the application in the web browser. The user enters a city in the search bar, and they are able to view the current weather and the 5-day forecast for the city. The searches are saved on the page and the user is able to delete them by clicking on the delete button next to city name.
 
+Below is a link to the deployed application on Render.
+https://full-stack-weather-forecast-application.onrender.com
+
+Below is a screenshot of the deployed application on Render.
+![Weather Dashboard Screenshot](<Screenshot 2024-12-28 at 11.35.37 AM.png>)
+
 ## License
 
 This project is licensed under the [MIT](https://opensource.org/licenses/MIT) license.
